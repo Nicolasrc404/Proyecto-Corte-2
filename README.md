@@ -1,73 +1,137 @@
-# React + TypeScript + Vite
+# Proyecto Final – Reconocimiento de Números Manuscritos
 
-This template provides a minimal setup to get React working in Vite with HMR and some ESLint rules.
+Aplicación web desarrollada en **React + Vite + TypeScript** para el reconocimiento de dígitos manuscritos, consumiendo una API de predicción mediante red neuronal en la nube.
 
-Currently, two official plugins are available:
+## 🚀 Tecnologías usadas
 
-- [@vitejs/plugin-react](https://github.com/vitejs/vite-plugin-react/blob/main/packages/plugin-react) uses [Babel](https://babeljs.io/) for Fast Refresh
-- [@vitejs/plugin-react-swc](https://github.com/vitejs/vite-plugin-react/blob/main/packages/plugin-react-swc) uses [SWC](https://swc.rs/) for Fast Refresh
+- React
+- Vite
+- TypeScript
+- TailwindCSS
+- SweetAlert2
+- React Router
 
-## React Compiler
+## ⚙️ Instalación
 
-The React Compiler is not enabled on this template because of its impact on dev & build performances. To add it, see [this documentation](https://react.dev/learn/react-compiler/installation).
+1. Clonar el repositorio:
+    
+    ```bash
+    git clone https://github.com/Nicolasrc404/Proyecto-2.git
+    cd Proyecto-2
+    ```
+    
+2. Instalar dependencias:
+    
+    ```bash
+    npm install
+    ```
+    
+3. Iniciar la aplicación en modo desarrollo:
+    
+    ```bash
+    npm run dev
+    ```
+    
+4. Abrir en el navegador:
+    
+    ```
+    http://localhost:5173
+    
+    ```
+    
 
-## Expanding the ESLint configuration
+## 📌 Uso de la aplicación
 
-If you are developing a production application, we recommend updating the configuration to enable type-aware lint rules:
+### 🏠 Home (`/`)
 
-```js
-export default defineConfig([
-  globalIgnores(['dist']),
-  {
-    files: ['**/*.{ts,tsx}'],
-    extends: [
-      // Other configs...
+Pantalla inicial con una breve descripción del proyecto y enlaces para navegar:
 
-      // Remove tseslint.configs.recommended and replace with this
-      tseslint.configs.recommendedTypeChecked,
-      // Alternatively, use this for stricter rules
-      tseslint.configs.strictTypeChecked,
-      // Optionally, add this for stylistic rules
-      tseslint.configs.stylisticTypeChecked,
+- Ir al formulario de reconocimiento.
+- Consultar el historial de predicciones.
 
-      // Other configs...
-    ],
-    languageOptions: {
-      parserOptions: {
-        project: ['./tsconfig.node.json', './tsconfig.app.json'],
-        tsconfigRootDir: import.meta.dirname,
-      },
-      // other options...
-    },
-  },
-])
+### 🖼️ ImageForm (`/image`)
+
+Formulario principal donde el usuario:
+
+- Sube una imagen de un dígito manuscrito (28x28 px).
+- Marca si la imagen debe **invertirse** (cuando está en blanco sobre negro).
+- Envía la imagen a la API con `multipart/form-data`.
+- Recibe:
+    - **Predicción del número**
+    - **Precisión (%)**
+    - **Tiempo de procesamiento**
+
+Cada petición se guarda en **localStorage** para mantener un historial local.
+
+### 📜 History (`/history`)
+
+Página que muestra el **historial de predicciones** guardadas en el navegador.
+
+Cada registro incluye:
+
+- Predicción obtenida
+- Precisión
+- Tiempo de procesamiento
+- Fecha y hora de ejecución
+
+Además, desde esta página se puede volver al formulario de reconocimiento.
+
+## 🔗 API
+
+La aplicación consume el endpoint:
+
+```
+http://ec2-54-81-142-28.compute-1.amazonaws.com:8080/predict
 ```
 
-You can also install [eslint-plugin-react-x](https://github.com/Rel1cx/eslint-react/tree/main/packages/plugins/eslint-plugin-react-x) and [eslint-plugin-react-dom](https://github.com/Rel1cx/eslint-react/tree/main/packages/plugins/eslint-plugin-react-dom) for React-specific lint rules:
+Formato de los datos enviados:
 
-```js
-// eslint.config.js
-import reactX from 'eslint-plugin-react-x'
-import reactDom from 'eslint-plugin-react-dom'
+- `invert`: `"true"` o `"false"`
+- `image`: archivo de la imagen
 
-export default defineConfig([
-  globalIgnores(['dist']),
-  {
-    files: ['**/*.{ts,tsx}'],
-    extends: [
-      // Other configs...
-      // Enable lint rules for React
-      reactX.configs['recommended-typescript'],
-      // Enable lint rules for React DOM
-      reactDom.configs.recommended,
-    ],
-    languageOptions: {
-      parserOptions: {
-        project: ['./tsconfig.node.json', './tsconfig.app.json'],
-        tsconfigRootDir: import.meta.dirname,
-      },
-      // other options...
-    },
-  },
-])
+Formato de la respuesta de la API:
+
+```json
+{
+  "prediction": number,
+  "accuracy": number,
+  "process_time": "string"
+}
+```
+
+# 🌳 File Three
+
+```markdown
+├── 📁 .git/ 🚫 (auto-hidden)
+├── 📁 .vscode/ 🚫 (auto-hidden)
+├── 📁 node_modules/ 🚫 (auto-hidden)
+├── 📁 public/
+│   └── 🖼️ vite.svg
+├── 📁 src/
+│   ├── 📁 Components/
+│   │   ├── 📁 History/
+│   │   │   └── 📄 history.tsx
+│   │   ├── 📁 Home/
+│   │   │   └── 📄 PagHome.tsx
+│   │   └── 📁 ImageForm/
+│   │       ├── 🎨 index.css
+│   │       └── 📄 index.tsx
+│   ├── 📁 assets/
+│   │   └── 🖼️ react.svg
+│   ├── 📁 models/
+│   │   └── 📄 Image.ts
+│   ├── 🎨 App.css
+│   ├── 📄 App.tsx
+│   ├── 🎨 index.css
+│   └── 📄 main.tsx
+├── 🚫 .gitignore
+├── 📖 README.md
+├── 📄 eslint.config.js
+├── 🌐 index.html
+├── 📄 package-lock.json
+├── 📄 package.json
+├── 📄 tsconfig.app.json
+├── 📄 tsconfig.json
+├── 📄 tsconfig.node.json
+└── 📄 vite.config.ts
 ```

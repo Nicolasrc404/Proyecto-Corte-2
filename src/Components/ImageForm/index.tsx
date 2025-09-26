@@ -3,6 +3,7 @@ import "./index.css";
 import { useState } from "react";
 import type { ImageRecognitionResponse } from "../../models/Image";
 import Swal from "sweetalert2";
+import { Link } from "react-router";
 
 function ImageForm() {
   const [invert, setinvert] = useState<boolean>(false);
@@ -46,7 +47,7 @@ function ImageForm() {
     }).then((result) => {
       if (result.isConfirmed) {
         const fromData = new FormData();
-        fromData.append("invert", `${invert}`);
+        fromData.append("invert", invert ? "true" : "false");
         fromData.append("image", image!);
 
         fetch("http://ec2-54-81-142-28.compute-1.amazonaws.com:8080/predict", {
@@ -55,12 +56,38 @@ function ImageForm() {
         })
           .then((response) => {
             if (!response.ok) {
-              alert(`Error: ${response.status}`);
+              Swal.fire({
+                title: "Error en el servidor",
+                text: `Código de error: ${response.status}`,
+                icon: "error",
+                confirmButtonText: "De acuerdo",
+              });
+              throw new Error(`HTTP error! status: ${response.status}`);
             }
-            return response.json() as unknown as ImageRecognitionResponse;
+            return response.json() as Promise<ImageRecognitionResponse>;
           })
-          .then((imageResponse) => setImageResponse(imageResponse))
-          .catch((error) => alert(`Error: ${error}`))
+          .then((imageResponse) => {
+            setImageResponse(imageResponse);
+            const logs = JSON.parse(localStorage.getItem("logs") || "[]");
+
+            const newLog = {
+              prediction: imageResponse.prediction,
+              accuracy: imageResponse.accuracy,
+              process_time: imageResponse.process_time,
+              fecha: new Date().toLocaleString(),
+            };
+
+            logs.push(newLog);
+            localStorage.setItem("logs", JSON.stringify(logs));
+          })
+          .catch((error) => {
+            Swal.fire({
+              title: "Error de conexión",
+              text: `No se pudo completar la petición: ${error}`,
+              icon: "error",
+              confirmButtonText: "De acuerdo",
+            });
+          })
           .finally(() => setLoading(false));
       }
       setLoading(false);
@@ -78,7 +105,8 @@ function ImageForm() {
         </h2>
         <div>
           <label htmlFor="invert" className="form-label">
-            Invertir imagen
+            Invertir imagen (marca si el dígito está en blanco sobre fondo
+            negro)
           </label>
           <input
             type="checkbox"
@@ -142,6 +170,14 @@ function ImageForm() {
           </p>
         </div>
       )}
+      <div className="text-center mt-6">
+        <Link
+          to="/history"
+          className="text-blue-800 hover:underline font-medium"
+        >
+          Ver historial
+        </Link>
+      </div>
     </>
   );
 }
