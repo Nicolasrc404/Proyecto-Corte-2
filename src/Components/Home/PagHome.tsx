@@ -10,7 +10,6 @@ function PagHome() {
         Sube una imagen y deja que el modelo la analice automáticamente.
       </p>
 
-      {/* Contenedor flex responsive */}
       <div className="flex flex-col md:flex-row justify-center gap-4">
         <Link
           to="/image"
