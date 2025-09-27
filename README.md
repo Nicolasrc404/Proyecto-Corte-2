@@ -99,7 +99,7 @@ Formato de la respuesta de la API:
 }
 ```
 
-## 🌳 File Three
+## 🌳 File Tree
 
 ```markdown
 ├── 📁 public/
