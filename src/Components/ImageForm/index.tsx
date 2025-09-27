@@ -1,3 +1,4 @@
+import type React from "react";
 import "./index.css";
 import { useState } from "react";
 import type { ImageRecognitionResponse } from "../../models/Image";
@@ -5,53 +6,79 @@ import Swal from "sweetalert2";
 import { Link } from "react-router";
 
 function ImageForm() {
-  const [invert, setinvert] = useState<boolean>(false);
+  const [invert, setInvert] = useState<boolean>(false);
   const [image, setImage] = useState<File | null>(null);
   const [preview, setPreview] = useState<string | null>(null);
   const [loading, setLoading] = useState<boolean>(false);
   const [imageResponse, setImageResponse] =
     useState<ImageRecognitionResponse | null>(null);
 
+  // Manejar selección de imagen
   const handleImageChange = (e: React.ChangeEvent<HTMLInputElement>) => {
-    if (e.target.files && e.target.files?.length > 0) {
+    if (e.target.files && e.target.files.length > 0) {
       const selectedImage = e.target.files[0];
-      setImage(selectedImage);
-
       const objectUrl = URL.createObjectURL(selectedImage);
-      setPreview(objectUrl);
+
+      // Validar que la imagen sea 28x28
+      const img = new Image();
+      img.src = objectUrl;
+
+      img.onload = () => {
+        if (img.width !== 28 || img.height !== 28) {
+          Swal.fire({
+            title: "Error",
+            text: "La imagen debe tener un tamaño de 28x28 píxeles.",
+            icon: "error",
+            confirmButtonText: "De acuerdo",
+          });
+          // Reiniciar estados si no es válida
+          setImage(null);
+          setPreview(null);
+          return;
+        }
+
+        // Si la imagen es válida, la guardamos
+        setImage(selectedImage);
+        setPreview(objectUrl);
+      };
     }
   };
 
+  // Manejar envío del formulario
   const handleSubmit = (e: React.FormEvent) => {
     e.preventDefault();
-    setLoading(true);
+
+    // Validar que haya imagen seleccionada
     if (!image) {
       Swal.fire({
         title: "¡Error!",
-        text: "Debes subir una imagen para el reconocimiento",
+        text: "Debes subir una imagen de 28x28 píxeles antes de enviar.",
         icon: "error",
         confirmButtonText: "De acuerdo",
       });
-      setLoading(false);
       return;
     }
 
+    setLoading(true);
+
+    // Confirmación antes de enviar
     Swal.fire({
-      title: "Confirmar operacion",
+      title: "Confirmar operación",
       text: "¿Desea reconocer esta imagen?",
       icon: "question",
       showCancelButton: true,
-      confirmButtonText: "Si",
+      confirmButtonText: "Sí",
       cancelButtonText: "No",
     }).then((result) => {
       if (result.isConfirmed) {
-        const fromData = new FormData();
-        fromData.append("invert", invert ? "true" : "false");
-        fromData.append("image", image!);
+        const formData = new FormData();
+        formData.append("invert", invert ? "true" : "false");
+        formData.append("image", image);
 
+        // Enviar al servidor
         fetch("http://ec2-54-81-142-28.compute-1.amazonaws.com:8080/predict", {
           method: "POST",
-          body: fromData,
+          body: formData,
         })
           .then((response) => {
             if (!response.ok) {
@@ -66,16 +93,17 @@ function ImageForm() {
             return response.json() as Promise<ImageRecognitionResponse>;
           })
           .then((imageResponse) => {
+            // Guardar la respuesta en estado
             setImageResponse(imageResponse);
-            const logs = JSON.parse(localStorage.getItem("logs") || "[]");
 
+            // Guardar en localStorage para el historial
+            const logs = JSON.parse(localStorage.getItem("logs") || "[]");
             const newLog = {
               prediction: imageResponse.prediction,
               accuracy: imageResponse.accuracy,
               process_time: imageResponse.process_time,
               fecha: new Date().toLocaleString(),
             };
-
             logs.push(newLog);
             localStorage.setItem("logs", JSON.stringify(logs));
           })
@@ -88,13 +116,15 @@ function ImageForm() {
             });
           })
           .finally(() => setLoading(false));
+      } else {
+        setLoading(false);
       }
-      setLoading(false);
     });
   };
 
   return (
     <>
+      {/* Formulario principal */}
       <form
         onSubmit={handleSubmit}
         className="max-w-md mx-auto mt-10 p-6 bg-slate-300 rounded-2xl shadow-lg space-y-6"
@@ -102,8 +132,10 @@ function ImageForm() {
         <h2 className="text-2xl font-bold text-slate-800 text-center">
           Subir imagen para reconocimiento
         </h2>
+
         <div>
-          <label htmlFor="invert" className="form-label">
+          {/* Opción de invertir */}
+          <label htmlFor="invert" className="form-label block">
             Invertir imagen (marca si el dígito está en blanco sobre fondo
             negro)
           </label>
@@ -111,12 +143,12 @@ function ImageForm() {
             type="checkbox"
             name="invert"
             id="invert"
-            onChange={() => {
-              setinvert(!invert);
-            }}
+            onChange={() => setInvert(!invert)}
           />
-          <label htmlFor="image" className="form-label">
-            Selecciona una imagen
+
+          {/* Selección de archivo */}
+          <label htmlFor="image" className="form-label mt-4 block">
+            Selecciona una imagen de 28x28 píxeles
           </label>
           <input
             type="file"
@@ -131,6 +163,8 @@ function ImageForm() {
             </p>
           )}
         </div>
+
+        {/* Vista previa */}
         {preview && (
           <div className="flex justify-center">
             <img
@@ -140,6 +174,8 @@ function ImageForm() {
             />
           </div>
         )}
+
+        {/* Botón enviar */}
         <button
           type="submit"
           disabled={loading}
@@ -148,14 +184,16 @@ function ImageForm() {
           {loading ? "Subiendo Imagen..." : "Enviar"}
         </button>
       </form>
+
+      {/* Resultado */}
       {imageResponse && (
         <div className="max-w-md mx-auto mt-10 p-6 bg-slate-300 rounded-2xl shadow-lg space-y-6">
           <h2 className="text-2xl font-bold text-slate-800 text-center">
             Resultado del reconocimiento
           </h2>
-          <p className="text-xl">Prediccion: {imageResponse.prediction}</p>
+          <p className="text-xl">Predicción: {imageResponse.prediction}</p>
           <p className="text-xl">
-            Precision:{" "}
+            Precisión:{" "}
             <span
               className={`${
                 imageResponse.accuracy > 50 ? "text-green-700" : "text-red-700"
@@ -169,6 +207,8 @@ function ImageForm() {
           </p>
         </div>
       )}
+
+      {/* Link al historial */}
       <div className="text-center mt-6">
         <Link
           to="/history"
@@ -180,4 +220,5 @@ function ImageForm() {
     </>
   );
 }
+
 export { ImageForm };
