@@ -99,12 +99,9 @@ Formato de la respuesta de la API:
 }
 ```
 
-# 🌳 File Three
+## 🌳 File Tree
 
 ```markdown
-├── 📁 .git/ 🚫 (auto-hidden)
-├── 📁 .vscode/ 🚫 (auto-hidden)
-├── 📁 node_modules/ 🚫 (auto-hidden)
 ├── 📁 public/
 │   └── 🖼️ vite.svg
 ├── 📁 src/
