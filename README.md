@@ -2,6 +2,11 @@
 
 Aplicación web desarrollada en **React + Vite + TypeScript** para el reconocimiento de dígitos manuscritos, consumiendo una API de predicción mediante red neuronal en la nube.
 
+## Autores:
+- Nicolas Rubiano Cortes
+- Angel Sebastian Castillo Leon
+- Yonatan David Ruiz 
+
 ## 🚀 Tecnologías usadas
 
 - React
@@ -36,7 +41,6 @@ Aplicación web desarrollada en **React + Vite + TypeScript** para el reconocimi
     
     ```
     http://localhost:5173
-    
     ```
     
 
