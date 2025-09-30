@@ -127,7 +127,7 @@ function ImageForm() {
       {/* Formulario principal */}
       <form
         onSubmit={handleSubmit}
-        className="max-w-md mx-auto mt-10 p-6 bg-slate-300 rounded-2xl shadow-lg space-y-6"
+        className="max-w-md mx-auto mt-10 p-6 bg-gray-300 border border-gray-400 rounded-2xl shadow-lg space-y-6"
       >
         <h2 className="text-2xl font-bold text-slate-800 text-center">
           Subir imagen para reconocimiento
@@ -155,7 +155,7 @@ function ImageForm() {
             name="image"
             id="image"
             onChange={handleImageChange}
-            className="block w-full p-2 text-sm text-slate-300 border border-slate-300 rounded-lg cursor-pointer bg-slate-500"
+            className="block w-full p-2 text-sm text-slate-300 border border-gray-700 rounded-lg cursor-pointer bg-slate-500"
           />
           {image && (
             <p className="mt-2 text-sm text-slate-500">
@@ -179,7 +179,7 @@ function ImageForm() {
         <button
           type="submit"
           disabled={loading}
-          className="block w-full py-2 px-4 rounded-lg text-slate-300  font-medium shadow-md  bg-blue-800"
+          className="block w-full py-2 px-4 rounded-lg text-slate-300  font-medium shadow-md  bg-gray-600 hover:bg-gray-900 border border-slate-700"
         >
           {loading ? "Subiendo Imagen..." : "Enviar"}
         </button>
@@ -187,7 +187,7 @@ function ImageForm() {
 
       {/* Resultado */}
       {imageResponse && (
-        <div className="max-w-md mx-auto mt-10 p-6 bg-slate-300 rounded-2xl shadow-lg space-y-6">
+        <div className="max-w-md mx-auto mt-10 p-6 bg-gray-300 border border-gray-400 rounded-2xl shadow-lg space-y-6">
           <h2 className="text-2xl font-bold text-slate-800 text-center">
             Resultado del reconocimiento
           </h2>

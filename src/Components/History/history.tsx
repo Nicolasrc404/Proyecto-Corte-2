@@ -17,7 +17,7 @@ function History() {
   }, []);
 
   return (
-    <div className="max-w-2xl mx-auto mt-10 p-6 bg-slate-200 rounded-2xl shadow-lg space-y-6">
+    <div className="max-w-2xl mx-auto mt-10 p-6 bg-gray-300 border border-gray-400   rounded-2xl shadow-lg space-y-6">
       <h2 className="text-2xl font-bold text-slate-800 text-center">
         Historial de predicciones
       </h2>
@@ -31,7 +31,7 @@ function History() {
           {logs.map((log, index) => (
             <div
               key={index}
-              className="p-4 bg-white rounded-xl shadow-md border border-slate-300"
+              className="p-4 bg-gray-200 rounded-xl shadow-md border border-gray-400"
             >
               <p className="text-slate-700">
                 <span className="font-semibold">Fecha:</span> {log.fecha}
@@ -60,7 +60,7 @@ function History() {
       )}
 
       <div className="text-center mt-6">
-        <Link to="/image" className="text-blue-800 hover:underline font-medium">
+        <Link to="/image" className="text-blue-600 hover:underline font-medium">
           Ir al reconocimiento de números
         </Link>
       </div>
