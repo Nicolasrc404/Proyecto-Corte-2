@@ -21,7 +21,7 @@ Aplicación web desarrollada en **React + Vite + TypeScript** para el reconocimi
 1. Clonar el repositorio:
     
     ```bash
-    git clone https://github.com/Nicolasrc404/Proyecto-2.git
+    git clone https://github.com/Nicolasrc404/Proyecto-Corte-2.git
     cd Proyecto-2
     ```
     
