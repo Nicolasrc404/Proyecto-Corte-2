@@ -102,6 +102,7 @@ function ImageForm() {
               prediction: imageResponse.prediction,
               accuracy: imageResponse.accuracy,
               process_time: imageResponse.process_time,
+              invert: invert,
               fecha: new Date().toLocaleString(),
             };
             logs.push(newLog);

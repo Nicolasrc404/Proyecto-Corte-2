@@ -5,6 +5,7 @@ interface LogEntry {
   prediction: number;
   accuracy: number;
   process_time: string;
+  invert: boolean;
   fecha: string;
 }
 
@@ -53,6 +54,10 @@ function History() {
               <p className="text-slate-700">
                 <span className="font-semibold">Tiempo:</span>{" "}
                 {log.process_time}
+              </p>
+              <p className="text-slate-700">
+                <span className="font-semibold"> Invert:</span>{" "}
+                {log.invert ? "Sí" : "No"}
               </p>
             </div>
           ))}
